@@ -1,0 +1,21 @@
+{
+  "system": {
+    "battery.level": 78,
+    "battery.charging": false
+  },
+  "steps": [
+    {
+      "text": "Not charging"
+    },
+    {
+      "event": {
+        "kind": "onClick",
+        "id": "refresh"
+      },
+      "system": {
+        "battery.charging": true
+      },
+      "text": "Charging"
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "core": "d22bf7c",
+  "apis": {
+    "1": [
+      "terminal.print",
+      "system.device",
+      "system.battery",
+      "ui.window",
+      "ui.tile"
+    ],
+    "2": [
+      "ui.tile",
+      "system.battery",
+      "system.time",
+      "state.local"
+    ]
+  },
+  "ui_v1": [
+    "text",
+    "button",
+    "column",
+    "row",
+    "progress",
+    "spacer",
+    "card",
+    "scrollableColumn"
+  ],
+  "ui_v2": [
+    "divider",
+    "switch",
+    "textInput",
+    "list",
+    "icon"
+  ],
+  "icons": [
+    "CLOCK",
+    "BATTERY",
+    "REFRESH",
+    "INFO"
+  ],
+  "events_v2": [
+    "onClick",
+    "onChange",
+    "onSubmit",
+    "onTimer",
+    "onResume"
+  ],
+  "source_bytes": 16384,
+  "archive_bytes": 8388608,
+  "ui_nodes": 48,
+  "ui_depth": 6,
+  "state_bytes": 512,
+  "state_keys": 16,
+  "timers": 2,
+  "minimum_interval_ms": 1000,
+  "maximum_interval_ms": 86400000,
+  "upstream_files": {
+    "app/src/main/java/dev/hyprdroid/launcher/packages/PackageManifest.kt": "38d84671beeed2daf25ccb24d399198fa93d0baa31b86e5c26b55a806a07dbf9",
+    "app/src/main/java/dev/hyprdroid/launcher/packages/HypPackageVerifier.kt": "1195bc3ff189106bf3a164262211e0fe505db12fbc7f5d42af8dc252ebf88524",
+    "app/src/main/java/dev/hyprdroid/launcher/packages/SignedPackageRepository.kt": "fbe9c4a1b68eeb5e2d95b6d2b0def0efa750dd4aed5325c39d9edd7645809cab",
+    "app/src/main/java/dev/hyprdroid/launcher/plugins/TileUi.kt": "4de7a82e3b19a05aeb42150483c2425dc6abbd494dae576b73ecd634326390e9",
+    "app/src/main/java/dev/hyprdroid/launcher/plugins/TileStateV2.kt": "b556b2198fb7f176a7f6984b25cfcb9093cbd315f514df15fa88375b0def5e72",
+    "app/src/main/java/dev/hyprdroid/launcher/plugins/TileScheduleV2.kt": "65224ecb9494d60896579b02b4f8cdd426756319bc74665920705813088bf13a",
+    "app/src/main/java/dev/hyprdroid/launcher/plugins/TileSystemV2.kt": "c7920f946ca3bf7128876a96a8bbbcc5328043e62fdad17d9f3732507de585d7",
+    "external-lua-native/src/main/native/runtime.c": "15315603cfb1ff108c79ddcb42d2c6bd54ce8031a7cff2f3e8c687ae59a816f8",
+    "external-lua-native/src/main/native/runtime_v2.inc": "a2a65cd5573524c144ac5978d2801ffb17eeb9f5f34719159dec9057a7e376f4",
+    "app/src/externalLua/aidl/dev/hyprdroid/launcher/external/IExternalLua.aidl": "e25e5e86052a7a8b38284a5173f75fb49a0c65442b073765f2c135599eb4f768"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "steps": [
+    {
+      "text": "Count: 0"
+    },
+    {
+      "event": {
+        "kind": "onClick",
+        "id": "increment"
+      },
+      "text": "Count: 1"
+    },
+    {
+      "text": "Count: 1"
+    },
+    {
+      "event": {
+        "kind": "onClick",
+        "id": "reset"
+      },
+      "text": "Count: 0"
+    }
+  ]
+}

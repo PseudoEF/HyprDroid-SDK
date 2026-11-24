@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hyprdroid-sdk"
+version = "0.1.0"
+description = "Tools for HyprDroid Lua tile packages"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {file = "LICENSE"}
+
+[project.scripts]
+hyp = "hyprdroid_sdk.cli:main"
+
+[tool.setuptools.package-data]
+hyprdroid_sdk = ["*.lua", "*.json"]

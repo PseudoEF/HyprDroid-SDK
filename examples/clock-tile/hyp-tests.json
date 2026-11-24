@@ -1,0 +1,34 @@
+{
+  "system": {
+    "device.time": {
+      "date": "2026-11-24",
+      "time24": "14:30:00",
+      "time12": "2:30:00 PM"
+    }
+  },
+  "steps": [
+    {
+      "text": "14:30:00"
+    },
+    {
+      "event": {
+        "kind": "onChange",
+        "id": "format24",
+        "value": false
+      },
+      "text": "2:30:00 PM",
+      "expect": {
+        "state": {
+          "format24": false
+        }
+      }
+    },
+    {
+      "event": {
+        "kind": "onTimer",
+        "id": "clock"
+      },
+      "text": "2:30:00 PM"
+    }
+  ]
+}
