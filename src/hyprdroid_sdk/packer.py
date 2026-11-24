@@ -108,7 +108,9 @@ def build(path, output):
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, "w") as archive:
         for name, data in (("manifest.json", canonical(manifest)), (manifest["entry"], source)):
-            archive.writestr(zipfile.ZipInfo(name), data, compress_type=zipfile.ZIP_STORED)
+            member = zipfile.ZipInfo(name)
+            member.create_system = 3  # The official ZIP uses Unix metadata on every platform.
+            archive.writestr(member, data, compress_type=zipfile.ZIP_STORED)
     contents = buffer.getvalue()
     if dest.exists() and not dest.is_symlink() and bounded_read(dest, CONTRACT["archive_bytes"]) == contents:
         return dest
@@ -126,7 +128,7 @@ def inspect(path):
             raise ValueError("Expected exactly manifest.json and one Lua entrypoint")
         for item in entries:
             mode = item.external_attr >> 16
-            if (not ENTRY.fullmatch(item.filename) and item.filename != "manifest.json") or item.is_dir() or (
+            if item.orig_filename != item.filename or (not ENTRY.fullmatch(item.filename) and item.filename != "manifest.json") or item.is_dir() or (
                 stat.S_IFMT(mode) not in (0, stat.S_IFREG)
             ) or item.flag_bits & 1 or item.compress_type not in (zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED):
                 raise ValueError(f"Unsafe ZIP member {item.filename!r}")
