@@ -4,7 +4,7 @@ import shutil
 import subprocess
 import sys
 import webbrowser
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from http.server import BaseHTTPRequestHandler, HTTPServer
 
 
 def preview_server(markup, port):
@@ -37,8 +37,12 @@ def preview_server(markup, port):
         def log_message(self, format, *args):
             pass
 
+    class PreviewHTTPServer(HTTPServer):
+        # Windows SO_REUSEADDR can allow a second server to steal this port.
+        allow_reuse_address = sys.platform != "win32"
+
     try:
-        return ThreadingHTTPServer(("127.0.0.1", port), PreviewHandler)
+        return PreviewHTTPServer(("127.0.0.1", port), PreviewHandler)
     except OSError as exc:
         raise ValueError(f"Cannot listen on 127.0.0.1:{port} ({exc}). Try another --port.") from exc
 

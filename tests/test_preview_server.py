@@ -1,5 +1,5 @@
 import http.client
-from http.server import ThreadingHTTPServer
+from http.server import HTTPServer
 import io
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
@@ -44,7 +44,7 @@ class PreviewServerTest(unittest.TestCase):
 
     def test_interrupt_closes_socket_and_browser_failure_prints_url(self):
         with patch("hyprdroid_sdk.preview_server.open_browser", return_value=False):
-            with patch.object(ThreadingHTTPServer,
+            with patch.object(HTTPServer,
                               "serve_forever", side_effect=KeyboardInterrupt):
                 stdout, stderr = io.StringIO(), io.StringIO()
                 with redirect_stdout(stdout), redirect_stderr(stderr):
