@@ -11,6 +11,7 @@ from pathlib import Path
 from . import __version__
 from .packer import bounded_read, build, inspect, project, read_json
 from .preview import page
+from .preview_server import serve_preview
 from .project import SOURCES, create
 from .runtime import check_syntax, lua_executable, scenario
 from .signing import exclusive, keygen, load_record, openssl, raw_sign, raw_verify, sign, verify
@@ -35,7 +36,10 @@ def parser():
         if name == "build":
             sub.add_argument("--output", type=Path, default=Path("dist"))
         if name == "preview":
-            sub.add_argument("--output", type=Path, default=Path("preview.html"))
+            sub.add_argument("--output", type=Path)
+            sub.add_argument("--serve", action="store_true", help="serve the generated page on 127.0.0.1")
+            sub.add_argument("--open", action="store_true", help="open the served URL in a browser")
+            sub.add_argument("--port", type=int, help="loopback port (default: 8765)")
     for name in ("inspect", "sign", "verify"):
         sub = commands.add_parser(name)
         sub.add_argument("artifact", type=Path)
@@ -83,6 +87,13 @@ def doctor():
 
 def run(args):
     cmd = args.command
+    if cmd == "preview":
+        if args.serve and args.output is not None:
+            raise ValueError("--output is only available for static preview")
+        if not args.serve and (args.open or args.port is not None):
+            raise ValueError("--open and --port require --serve")
+        if args.port is not None and not 1 <= args.port <= 65535:
+            raise ValueError("--port must be between 1 and 65535")
     if cmd == "doctor":
         return doctor()
     if cmd == "create":
@@ -124,8 +135,13 @@ def run(args):
                 raise ValueError("Contract suite must be a JSON object")
             frames = scenario(manifest, source, suite)
             if cmd == "preview":
-                exclusive(args.output, page(frames[-1]["ui"], manifest["apiVersion"]).encode())
-                print(args.output.resolve())
+                markup = page(frames[-1]["ui"], manifest["apiVersion"]).encode("utf-8")
+                if args.serve:
+                    serve_preview(markup, args.port or 8765, args.open)
+                else:
+                    output = args.output or Path("preview.html")
+                    exclusive(output, markup)
+                    print(output.resolve())
             elif args.json:
                 report({"ok": True, "steps": len(frames), "frames": frames})
             else:

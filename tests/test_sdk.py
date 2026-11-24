@@ -164,10 +164,18 @@ class SDKTests(unittest.TestCase):
         path = self.root / "my-module"
         def cli(*args):
             return subprocess.run(["hyp", *map(str, args)], check=True, capture_output=True, text=True).stdout
-        self.assertIn("0.1.0", cli("--version"))
+        self.assertIn("0.1.1", cli("--version"))
         cli("create", path, "--template", "counter")
         cli("validate", path)
         self.assertTrue(json.loads(cli("test", path, "--json"))["ok"])
         cli("build", path, "--output", self.root / "dist")
         cli("inspect", self.root / "dist" / "my-module-1.0.0.hyp")
         cli("preview", path, "--output", self.root / "preview.html")
+        artifact = self.root / "dist" / "my-module-1.0.0.hyp"
+        private = self.root / "developer.pem"
+        public = self.root / "developer.pub.pem"
+        record = self.root / "developer.signature.json"
+        cli("keygen", "--private", private, "--public", public)
+        cli("sign", artifact, "--private", private, "--url",
+            "https://example.invalid/my-module-1.0.0.hyp", "--output", record)
+        cli("verify", artifact, "--signature", record, "--public", public)

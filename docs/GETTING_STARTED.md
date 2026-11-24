@@ -18,14 +18,39 @@ Use Python 3.11+, PUC Lua 5.4 and OpenSSL 3. The SDK itself has no Python runtim
     hyp test .
     hyp build .
     hyp inspect dist/my-tile-1.0.0.hyp
-    hyp preview .
+    hyp preview . --serve --open
 
-Open preview.html in a browser. On Android you can copy it to Downloads after granting
-Termux storage access, or use the command below from the project directory and open
-http://127.0.0.1:8765/preview.html. Run this command in a directory containing only files
-you want the local server to expose. Keep private keys elsewhere.
+If Android does not open the browser, open the printed HTTP URL manually.
+The SDK serves only the generated HTML on 127.0.0.1. Use Ctrl+C to stop it.
+For an alternate port, use hyp preview . --serve --port 8765. The original
+hyp preview . still writes preview.html without starting a server.
 
-    python -m http.server 8765 --bind 127.0.0.1
+### Generate a developer key and sign a package
+
+Run from my-tile after building it. Choose a new directory outside the project.
+
+    (umask 077; mkdir "$HOME/.hyp-my-tile-keys")
+    hyp keygen --private "$HOME/.hyp-my-tile-keys/developer.pem" --public "$HOME/.hyp-my-tile-keys/developer.pub.pem"
+    hyp sign dist/my-tile-1.0.0.hyp --private "$HOME/.hyp-my-tile-keys/developer.pem" --url https://example.invalid/my-tile-1.0.0.hyp --output dist/my-tile.signature.json
+    hyp verify dist/my-tile-1.0.0.hyp --signature dist/my-tile.signature.json --public "$HOME/.hyp-my-tile-keys/developer.pub.pem"
+
+The URL is signed metadata. This example does not upload anything. Keep
+developer.pem private. A verified developer signature does not grant
+execution permission in the ordinary HyprDroid app.
+
+### Pixel 9 compatibility record for SDK 0.1.0
+
+The owner verified pip installation, doctor, counter scaffolding, validation,
+Lua contract tests, build, inspect, reproducible SHA-256 and HTTP preview on
+Android 17 with Termux, Python 3.14.10, Lua 5.4 and OpenSSL 3.6.5. Chrome
+could not open the private HTML through the Termux content URI. Manually
+serving the generated HTML through localhost worked. The Ed25519 self-test
+passed. The owner has yet to complete the manual keygen, sign and verify
+sequence on the device.
+
+The generated API 2 counter had ui.tile and state.local capabilities.
+Its my-tile-1.0.0.hyp was 698 bytes with SHA-256
+fc61de1a6d628f1bc02e2227ba7e90cce33934129ede2b4d4ae471a9a84832ab.
 
 [Termux Lua 5.4 package](https://github.com/termux/termux-packages/blob/master/packages/lua54/build.sh)
 · [OpenSSL command-line package](https://github.com/termux/termux-packages/blob/master/packages/openssl/openssl-tool.subpackage.sh)
